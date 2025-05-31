@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Player Sheet</title>
+</head>
+<body>
+  <script>
+    document.getElementById('setupBtn').addEventListener('click', () => {
+      localStorage.setItem("Fonks.yaml", "name: Fonks\nclass: Warrior\nlevel: 5");
+      localStorage.setItem("Kratts.yaml", "name: Kratts\nclass: Mage\nlevel: 3");
+
+      document.getElementById('status').textContent = "Player sheets saved to localStorage.";
+    });
+  </script>
+  <h1>Player Sheet</h1>
+    <div>
+    <label for="playerSelect">Select a player:</label>
+    <select id="playerSelect">
+      <option value="">--Choose a player--</option>
+    </select>
+    <button id="loadPlayer">Load Sheet</button>
+  </div>
+
+  <script>
+    // Populate dropdown with YAML files from localStorage
+    const select = document.getElementById('playerSelect');
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.endsWith('.yaml')) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = key.replace(/\.yaml$/, '');
+        select.appendChild(option);
+      }
+    }
+
+    // On button click, store selected file name and redirect
+    document.getElementById('loadPlayer').addEventListener('click', () => {
+      const selected = select.value;
+      if (selected) {
+        localStorage.setItem('selectedPlayer', selected); // save which file to load
+        window.location.href = 'sheet.html'; // go to the sheet page
+      }
+    });
+  </script>
+
+  <pre id="sheetDisplay">Loading...</pre>
+
+  <script>
+    const key = localStorage.getItem('selectedPlayer');
+    const content = key ? localStorage.getItem(key) : 'No player selected.';
+    document.getElementById('sheetDisplay').textContent = content || 'No data found.';
+  </script>
+</body>
+</html>
